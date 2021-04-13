@@ -1,10 +1,12 @@
 const http = require("http");
 const url = require("url");
 
-const server = http.createServer(function(req, res) {
+const server = http.createServer(function (req, res) {
   //console.log(req.url);
   let parsedURL = url.parse(req.url, true);
   let path = parsedURL.pathname;
+
+  //comment
   // parsedURL.pathname  parsedURL.query
   // standardize the requested url by removing any '/' at the start or end
   // '/folder/to/file/' becomes 'folder/to/file'
@@ -14,22 +16,21 @@ const server = http.createServer(function(req, res) {
   let headers = req.headers;
   let method = req.method.toLowerCase();
 
-  req.on("data", function() {
+  req.on("data", function () {
     console.log("got some data");
     //if no data is passed we don't see this messagee
     //but we still need the handler so the "end" function works.
   });
-  req.on("end", function() {
+  req.on("end", function () {
     //request part is finished... we can send a response now
     console.log("send a response");
     //we will use the standardized version of the path
-    let route =
-      typeof routes[path] !== "undefined" ? routes[path] : routes["notFound"];
+    let route = typeof routes[path] !== "undefined" ? routes[path] : routes["notFound"];
     let data = {
       path: path,
       queryString: qs,
       headers: headers,
-      method: method
+      method: method,
     };
     //pass data incase we need info about the request
     //pass the response object because router is outside our scope
@@ -37,7 +38,7 @@ const server = http.createServer(function(req, res) {
   });
 });
 
-server.listen(1234, function() {
+server.listen(1234, function () {
   console.log("Listening on port 1234");
 });
 
@@ -47,10 +48,10 @@ server.listen(1234, function() {
 //data: the info about the request
 //callback: the function to call to send the response
 let routes = {
-  kenny: function(data, res) {
+  kenny: function (data, res) {
     // this function called if the path is 'kenny'
     let payload = {
-      name: "Kenny"
+      name: "Kenny",
     };
     let payloadStr = JSON.stringify(payload);
     res.setHeader("Content-Type", "application/json");
@@ -59,10 +60,10 @@ let routes = {
     res.write(payloadStr);
     res.end("\n");
   },
-  cartman: function(data, res) {
+  cartman: function (data, res) {
     // this function called if the path is 'cartman'
     let payload = {
-      name: "Cartman"
+      name: "Cartman",
     };
     let payloadStr = JSON.stringify(payload);
     res.setHeader("Content-Type", "application/json");
@@ -71,12 +72,12 @@ let routes = {
     res.write(payloadStr);
     res.end("\n");
   },
-  
-  notFound: function(data, res) {
+
+  notFound: function (data, res) {
     //this one gets called if no route matches
     let payload = {
       message: "File Not Found",
-      code: 404
+      code: 404,
     };
     let payloadStr = JSON.stringify(payload);
     res.setHeader("Content-Type", "application/json");
@@ -85,5 +86,5 @@ let routes = {
 
     res.write(payloadStr);
     res.end("\n");
-  }
+  },
 };
